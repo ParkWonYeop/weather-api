@@ -1,0 +1,10 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "pwy9679",
+    "password": "411311pwy",
+    "database": "weather",
+    "entities": ["src/entities/**/*.ts"],
+    "synchronize": true
+  }

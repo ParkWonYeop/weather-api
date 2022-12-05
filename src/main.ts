@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { ValidationPipe } from '@nestjs/common';
+import { WinstonLogger } from 'nest-winston';
 
 dotenv.config({
   path: path.resolve(
@@ -15,6 +17,12 @@ dotenv.config({
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+    disableErrorMessages: false,
+  });
   await app.listen(3000);
 }
 bootstrap();

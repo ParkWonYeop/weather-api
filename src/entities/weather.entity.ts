@@ -5,11 +5,13 @@ import {
   CreateDateColumn,
   OneToOne,
   JoinColumn,
+  Unique,
 } from 'typeorm/index';
 
 import { localEntity } from './local.entity';
 
-@Entity('weather_information')
+@Unique(['date', 'time', 'area'])
+@Entity('weather_info')
 export class weatherEntity {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
@@ -21,11 +23,11 @@ export class weatherEntity {
   @JoinColumn({ name: 'area', referencedColumnName: 'id' })
   area: number;
 
-  @Column({ length: 30 })
+  @Column({ length: 10 })
   date: string;
 
-  @Column({ length: 30 })
-  time: string;
+  @Column({ type: 'int' })
+  time: number;
 
   @Column({ type: 'int' })
   PTY: number;
@@ -56,4 +58,20 @@ export class weatherEntity {
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
   public created_at: Date;
+
+  static create(weatherInfo) {
+    const weather = new weatherEntity();
+    weather.area = weatherInfo.area;
+    weather.date = weatherInfo.date;
+    weather.time = weatherInfo.time;
+    weather.PTY = weatherInfo.PTY;
+    weather.REH = weatherInfo.REH;
+    weather.RN1 = weatherInfo.RN1;
+    weather.T1H = weatherInfo.T1H;
+    weather.UUU = weatherInfo.UUU;
+    weather.VVV = weatherInfo.VVV;
+    weather.VEC = weatherInfo.VEC;
+    weather.WSD = weatherInfo.WSD;
+    return weather;
+  }
 }

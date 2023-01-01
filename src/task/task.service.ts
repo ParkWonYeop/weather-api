@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { localEntity } from 'src/entities/local.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Entity, Repository } from 'typeorm/index';
+import { Repository } from 'typeorm/index';
 import { xml2js } from 'xml-js';
 import { weatherEntity } from 'src/entities/weather.entity';
 import { Cron } from '@nestjs/schedule';
@@ -25,7 +25,7 @@ export class TaskService {
     this.weatherRepository = weatherRepository;
   }
 
-  @Cron('0 1 * * * *', { name: 'sampleTask' })
+  @Cron('20 22 * * * *', { name: 'sampleTask' })
   handleCron() {
     this.cronTask();
   }
@@ -138,7 +138,7 @@ export class TaskService {
       const weather = this.weatherRepository.create(weatherInfo);
       await this.weatherRepository.save(weather);
 
-      this.logger.log('success' + element.city);
+      this.logger.log('success' + element.City);
     } catch (err) {
       this.logger.log(err);
     }

@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
 
 export class SelectWeatherDto {
   @IsNotEmpty()
@@ -15,4 +14,12 @@ export class SelectWeatherDto {
   date: string;
 }
 
-export class UpdateUserDto extends PartialType(SelectWeatherDto) {}
+export class SelectAllWeatherDto {
+  @IsNotEmpty()
+  @IsNumber()
+  time: number;
+
+  @IsNotEmpty()
+  @IsString()
+  date: string;
+}

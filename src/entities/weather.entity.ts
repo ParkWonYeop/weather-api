@@ -3,8 +3,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  OneToOne,
-  JoinColumn,
   Unique,
 } from 'typeorm/index';
 
@@ -16,11 +14,7 @@ export class weatherEntity {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: number;
 
-  @OneToOne((type) => localEntity, (localEntity) => localEntity.id, {
-    nullable: false,
-    createForeignKeyConstraints: false,
-  })
-  @JoinColumn({ name: 'area', referencedColumnName: 'id' })
+  @Column({ type: 'int' })
   area: number;
 
   @Column({ length: 10 })

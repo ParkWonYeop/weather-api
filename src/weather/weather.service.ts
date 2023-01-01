@@ -25,7 +25,47 @@ export class WeatherService {
     }
   }
 
+  async getAllWeatherInfo(selectWeatherDto): Promise<weatherEntity[]> {
+    try {
+      return this.weatherRepository.find(selectWeatherDto);
+    } catch (err) {
+      this.logger.log(err);
+    }
+  }
+
+  async getAllLocalInfo(): Promise<localEntity[]> {
+    try {
+      const data = await this.localRepository.find();
+      return data;
+    } catch (err) {
+      this.logger.log(err);
+    }
+  }
+
   async getLocalInfo(): Promise<localEntity[]> {
+    try {
+      const data = await this.localRepository
+        .createQueryBuilder()
+        .select('DISTINCT (County)')
+        .getRawMany();
+      return data;
+    } catch (err) {
+      this.logger.log(err);
+    }
+  }
+
+  async getCityInfo(localDto): Promise<localEntity[]> {
+    try {
+      return await this.localRepository
+        .createQueryBuilder()
+        .where('county IN (:county)', { county: localDto.county })
+        .getMany();
+    } catch (err) {
+      this.logger.log(err);
+    }
+  }
+
+  async getAllCityInfo(): Promise<any> {
     try {
       return await this.localRepository.find();
     } catch (err) {

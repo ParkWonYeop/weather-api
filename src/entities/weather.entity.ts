@@ -6,8 +6,6 @@ import {
   Unique,
 } from 'typeorm/index';
 
-import { localEntity } from './local.entity';
-
 @Unique(['date', 'time', 'area'])
 @Entity('weather_info')
 export class weatherEntity {

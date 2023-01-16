@@ -1,11 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
-import { localEntity } from 'src/entities/local.entity';
+import { localEntity } from '../entities/local.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/index';
 import { xml2js } from 'xml-js';
-import { weatherEntity } from 'src/entities/weather.entity';
+import { weatherEntity } from '../entities/weather.entity';
 import { Cron } from '@nestjs/schedule';
+import { TaskDto } from './dto/task.dto';
 
 //import { Cron } from '@nestjs/schedule';
 
@@ -30,11 +31,11 @@ export class TaskService {
     this.cronTask();
   }
 
-  async startTask(taskDto): Promise<number> {
+  async startTask(taskDto: TaskDto): Promise<number> {
     try {
       let hour: number;
 
-      if (taskDto.time == 0) {
+      if (taskDto.time === 0) {
         hour = 24;
       } else {
         hour = taskDto.time;
@@ -61,7 +62,7 @@ export class TaskService {
     }
   }
 
-  async cronTask(): Promise<any> {
+  async cronTask() {
     const localInformation = await this.localRepository.find();
     const now = new Date();
 
@@ -83,33 +84,48 @@ export class TaskService {
     }
 
     hour--;
-    if (hour == 0) hour = 24;
-    else if (hour == -1) hour = 23;
 
-    if (hour <= 10) time = '0' + String(hour) + '00';
-    else time = String(hour) + '00';
+    if (hour === 0) {
+      hour = 24;
+    } else if (hour === -1) {
+      hour = 23;
+    }
+
+    if (hour <= 10) {
+      time = '0' + String(hour) + '00';
+    } else {
+      time = String(hour) + '00';
+    }
 
     localInformation.forEach(async (element) => {
       await this.getWeatherInfo(element, date, time, hour);
     });
   }
 
-  async getWeatherInfo(element: any, date: string, time: string, hour: number) {
+  async getWeatherInfo(
+    element: localEntity,
+    date: string,
+    time: string,
+    hour: number,
+  ) {
     try {
-      const result = await this.httpService
-        .get(
-          'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=' +
-            process.env.API_KEY +
-            '&numOfRows=10&pageNo=1&base_date=' +
-            date +
-            '&base_time=' +
-            time +
-            '&nx=' +
-            element.grid_x +
-            '&ny=' +
-            element.grid_y,
-        )
-        .toPromise();
+      const url =
+        'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst';
+      const params = {
+        params: {
+          serviceKey: process.env.API_KEY,
+          numOfRows: 10,
+          pageNo: 1,
+          base_date: date,
+          base_time: time,
+          nx: element.grid_x,
+          ny: element.grid_y,
+        },
+      };
+
+      const result = await this.httpService.get(url, params).toPromise();
+
+      console.log(result);
 
       const resultJson = xml2js(result.data);
 

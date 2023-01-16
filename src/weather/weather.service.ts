@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { localEntity } from 'src/entities/local.entity';
-import { weatherEntity } from 'src/entities/weather.entity';
+import { localEntity } from '../entities/local.entity';
+import { weatherEntity } from '../entities/weather.entity';
 import { Repository } from 'typeorm/index';
 
 @Injectable()

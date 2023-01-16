@@ -21,7 +21,7 @@ describe('WeatherService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should be weatherEntity', () => {
+  it('should be localEntity', () => {
     const result = service.getAllLocalInfo();
     expect(result).toBeInstanceOf(localEntity);
   });

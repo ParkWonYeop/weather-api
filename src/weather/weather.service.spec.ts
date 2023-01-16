@@ -10,7 +10,10 @@ describe('WeatherService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot(ormconfig)],
+      imports: [
+        TypeOrmModule.forRoot(ormconfig),
+        TypeOrmModule.forFeature([localEntity, weatherEntity]),
+      ],
       providers: [WeatherService],
     }).compile();
 
